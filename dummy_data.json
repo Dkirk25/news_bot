@@ -1,0 +1,21 @@
+ {
+     "results": [{
+         "api_source": "cnbc",
+         "author": "",
+         "currency_id": "None",
+         "num_clicks": 0,
+         "preview_image_url": "https://images.robinhood.com/M4zpzpcfHcuZmJ1RkrKkVLigb4Q/aHR0cHM6Ly9pbWFnZXMucm9iaW5ob29kLmNvbS9YVHN6MFo0VjZlckRDYUZ0eUVKMjhFUmpVclUvYUhSMGNITTZMeTlwYldGblpTNWpibUpqWm0wdVkyOXRMMkZ3YVM5Mk1TOXBiV0ZuWlM4eE1EUTBORFUzTWpZdFZ5MHhOVjh3TlM1cWNHY19kajB4TlRJNU5EYzBPVGsw",
+         "preview_text": "Shares of electric vehicle maker Workhorse Group have gained more than 400% this year amid a surge in investor interest in the space, and Cowen believes the sto",
+         "published_at": "2020-08-11T18:41:00Z",
+         "related_instruments": [
+             "85b61d0d-257b-43ee-8498-a69fb02703a4"
+         ],
+         "relay_url": "https://news.robinhood.com/57373fad-76b0-370d-8157-c5e1c497bd28/",
+         "source": "CNBC",
+         "summary": "",
+         "title": "Workhorse Group is up more than 400% this year. Cowen just nearly doubled its price target anyway",
+         "updated_at": "2020-08-11T19:00:35.206330Z",
+         "url": "https://www.cnbc.com/2020/08/11/workhorse-group-is-up-more-than-400percent-this-year-cowen-just-nearly-doubled-its-price-target-anyway.html",
+         "uuid": "57373fad-76b0-370d-8157-c5e1c497bd28"
+     }]
+ }
