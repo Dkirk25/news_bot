@@ -21,9 +21,6 @@ rh.login(username=USERNAME,
          password=PASSWORD,
          qr_code=MFA)
 
-# Initiate our scheduler so we can keep checking every minute for new price changes
-# s1 = sched.scheduler(time.time, time.sleep)
-
 
 def fetch_news():
     print("Getting news\n")
@@ -36,7 +33,8 @@ def fetch_news():
         print(str(stock_info))
 
 
-schedule.every().minute.at(":10").do(fetch_news)
+schedule.every(1).minutes.do(fetch_news)
+# schedule.every().minute.at("1:00").do(fetch_news)
 
 while True:
     schedule.run_all()
