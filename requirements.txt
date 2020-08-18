@@ -6,3 +6,9 @@ Jinja2==2.11.2
 MarkupSafe==1.1.1
 Werkzeug==1.0.1
 discord==1.4.1
+numpy
+tulipy 
+schedule
+time
+pyotp
+Robinhood
