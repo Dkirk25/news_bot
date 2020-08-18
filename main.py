@@ -19,7 +19,8 @@ MFA = os.getenv("MFA")
 USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
 
-BOT_NAME = "news-bot"
+BOT_NAME = os.getenv("BOT_NAME")
+CHANNEL_NAME = os.getenv("CHANNEL_NAME")
 
 totp = pyotp.TOTP(MFA).now()
 rh = Robinhood()
