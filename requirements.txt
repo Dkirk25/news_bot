@@ -9,6 +9,5 @@ discord
 numpy
 tulipy 
 schedule
-time
 pyotp
 Robinhood
