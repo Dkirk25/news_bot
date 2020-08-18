@@ -68,7 +68,7 @@ def list_of_news_bot_messages(messages):
 async def post_news_info():
     await client.wait_until_ready()
     while(True):
-        channel = await get_channel(client.get_all_channels(), 'general')
+        channel = await get_channel(client.get_all_channels(), CHANNEL_NAME)
 
         # Call stock news and return list of stock info
         stock_info_list = await fetch_news()
