@@ -28,6 +28,11 @@ rh.login(username=USERNAME,
          password=PASSWORD,
          qr_code=MFA)
 
+# Bot commands to add and remove stocks to get news.
+
+# PREFIX = "$"
+# bot = commands.Bot(command_prefix=PREFIX, self_bot=True)
+
 
 async def get_channel(channels, channel_name):
     for channel in client.get_all_channels():
@@ -104,6 +109,13 @@ async def post_news_info():
                 await channel.send(embed=embed)
                 # Play every # of seconds
                 await asyncio.sleep(600)
+
+# @bot.command(pass_context=True, aliases=['a'])
+# async def add_stock(ctx, *args):
+
+
+# @bot.command(pass_context=True, aliases=['r'])
+# async def remove_stock(ctx, *args):
 
 
 @client.event
