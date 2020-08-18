@@ -77,7 +77,7 @@ async def post_news_info():
         messages = await channel.history(limit=10).flatten()
 
         # Get only news-bot messages
-        news_bot_messages = list_of_news_bot_messages(messages)
+        news_bot_messages = []
 
         [news_bot_messages.append(
             message) for message in messages if message.author.name == BOT_NAME]
