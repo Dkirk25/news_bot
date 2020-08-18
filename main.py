@@ -109,6 +109,7 @@ async def post_news_info():
                 await channel.send(embed=embed)
                 # Play every # of seconds
                 await asyncio.sleep(600)
+        await asyncio.sleep(600)
 
 # @bot.command(pass_context=True, aliases=['a'])
 # async def add_stock(ctx, *args):
