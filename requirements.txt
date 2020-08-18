@@ -12,5 +12,4 @@ schedule
 pyotp
 robin-stocks
 pyrh
-load_dotenv
-dotenv
+python-dotenv
