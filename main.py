@@ -70,9 +70,6 @@ async def post_news_info():
     while(True):
         channel = await get_channel(client.get_all_channels(), CHANNEL_NAME)
 
-        # Call stock news and return list of stock info
-        stock_info_list = await fetch_news()
-
         # Read history of discord chat and save the last 10 messages
         messages = await channel.history(limit=10).flatten()
 
@@ -87,11 +84,14 @@ async def post_news_info():
             if(len(news_bot_messages) > 0):
                 latest_discord_message = news_bot_messages[0]
 
-                # latest discord message is older than stock
-                latest_stock = stock_info_list[0]
-                clean_date = get_clean_date(latest_stock.published_at)
+            # Call stock news and return list of stock info
+            stock_info_list = await fetch_news()
 
-                # if any of the published_at in stock info list is newer than the last message in discord chat, then post stock info in chat
+            # latest discord message is older than stock
+            latest_stock = stock_info_list[0]
+            clean_date = get_clean_date(latest_stock.published_at)
+
+            # if any of the published_at in stock info list is newer than the last message in discord chat, then post stock info in chat
             if(len(news_bot_messages) == 0 or clean_date > latest_discord_message.created_at):
                 # Create embed then post stock info
                 embed = discord.Embed(
