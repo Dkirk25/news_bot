@@ -107,8 +107,7 @@ async def post_news_info():
                 embed.set_author(name=latest_stock.author)
                 # Send stock news to discord channel
                 await channel.send(embed=embed)
-                # Play every # of seconds
-                await asyncio.sleep(600)
+        # Play every 10min of seconds
         await asyncio.sleep(600)
 
 # @bot.command(pass_context=True, aliases=['a'])
