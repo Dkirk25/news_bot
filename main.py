@@ -78,30 +78,32 @@ async def post_news_info():
 
         # Get only news-bot messages
         news_bot_messages = []
+        clean_date = ""
+        if(len(messages) > 0):
+            [news_bot_messages.append(
+                message) for message in messages if message.author.name == BOT_NAME]
 
-        [news_bot_messages.append(
-            message) for message in messages if message.author.name == BOT_NAME]
+            # check last article published_at by the bot
+            if(len(news_bot_messages) > 0):
+                latest_discord_message = news_bot_messages[0]
 
-        # check last article published_at by the bot
-        latest_discord_message = news_bot_messages[0]
+                # latest discord message is older than stock
+                latest_stock = stock_info_list[0]
+                clean_date = get_clean_date(latest_stock.published_at)
 
-        # latest discord message is older than stock
-        latest_stock = stock_info_list[0]
-        clean_date = get_clean_date(latest_stock.published_at)
-
-        # if any of the published_at in stock info list is newer than the last message in discord chat, then post stock info in chat
-        if(clean_date > latest_discord_message.created_at):
-            # Create embed then post stock info
-            embed = discord.Embed(
-                title=latest_stock.title,
-                description=latest_stock.text,
-                url=latest_stock.url
-            )
-            embed.set_author(name=latest_stock.author)
-            # Send stock news to discord channel
-            await channel.send(embed=embed)
-            # Play every # of seconds
-            await asyncio.sleep(600)
+                # if any of the published_at in stock info list is newer than the last message in discord chat, then post stock info in chat
+            if(len(news_bot_messages) == 0 or clean_date > latest_discord_message.created_at):
+                # Create embed then post stock info
+                embed = discord.Embed(
+                    title=latest_stock.title,
+                    description=latest_stock.text,
+                    url=latest_stock.url
+                )
+                embed.set_author(name=latest_stock.author)
+                # Send stock news to discord channel
+                await channel.send(embed=embed)
+                # Play every # of seconds
+                await asyncio.sleep(600)
 
 
 @client.event
