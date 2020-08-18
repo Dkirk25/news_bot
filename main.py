@@ -19,19 +19,17 @@ MFA = os.getenv("MFA")
 USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
 
+BOT_NAME = "news-bot"
+
 totp = pyotp.TOTP(MFA).now()
 rh = Robinhood()
 rh.login(username=USERNAME,
          password=PASSWORD,
          qr_code=MFA)
 
-# Add scheduler to discord bot to run every hour???
-# https://www.youtube.com/watch?v=rWAnKvI2ePI
-
 
 async def get_channel(channels, channel_name):
     for channel in client.get_all_channels():
-        # print(channel)
         if channel.name == channel_name:
             return channel
     return None
@@ -51,13 +49,19 @@ async def fetch_news():
     return clean_stock_list
 
 
-async def get_clean_date(dirty_date):
+def get_clean_date(dirty_date):
     clean_date = dirty_date.replace(
         "-", "/").replace("T", " ").replace("Z", "")
     print(clean_date)
     stock_date = datetime.strptime(
         clean_date, '%Y/%m/%d %H:%M:%S')
     return stock_date
+
+
+def list_of_news_bot_messages(messages):
+    news_bot_messages = []
+    return list(news_bot_messages.append(
+        message) for message in messages if message.author.name == BOT_NAME)
 
 
 async def post_news_info():
@@ -71,20 +75,21 @@ async def post_news_info():
         # Read history of discord chat and save the last 10 messages
         messages = await channel.history(limit=10).flatten()
 
-        news_bot_messages = []
+        # Get only news-bot messages
+        news_bot_messages = list_of_news_bot_messages(messages)
+
         [news_bot_messages.append(
-            message) for message in messages if message.author.name == "news-bot"]
+            message) for message in messages if message.author.name == BOT_NAME]
 
         # check last article published_at by the bot
         latest_discord_message = news_bot_messages[0]
-        print(latest_discord_message)
 
         # latest discord message is older than stock
         latest_stock = stock_info_list[0]
-        clean_date = await get_clean_date(latest_stock.published_at)
+        clean_date = get_clean_date(latest_stock.published_at)
 
         # if any of the published_at in stock info list is newer than the last message in discord chat, then post stock info in chat
-        if(clean_date <= latest_discord_message.created_at):
+        if(clean_date > latest_discord_message.created_at):
             # Create embed then post stock info
             embed = discord.Embed(
                 title=latest_stock.title,
@@ -95,14 +100,13 @@ async def post_news_info():
             # Send stock news to discord channel
             await channel.send(embed=embed)
             # Play every # of seconds
-            await asyncio.sleep(10)
+            await asyncio.sleep(600)
 
 
 @client.event
 async def on_ready():
     print("Bot is ready")
-    await post_news_info()
 
 
-# client.loop.create_task(post_news_info())
+client.loop.create_task(post_news_info())
 client.run(os.getenv("TOKEN"))
