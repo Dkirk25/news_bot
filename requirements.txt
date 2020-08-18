@@ -11,3 +11,4 @@ tulipy
 schedule
 pyotp
 robin-stocks
+pyrh
