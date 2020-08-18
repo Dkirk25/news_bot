@@ -12,4 +12,6 @@ schedule
 pyotp
 robin-stocks
 pyrh
+sys
+os
 dotenv
