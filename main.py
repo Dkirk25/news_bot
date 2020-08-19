@@ -77,46 +77,54 @@ def create_embed(new_stock_info):
         description=new_stock_info.text,
         url=new_stock_info.url
     )
-    embed.set_author(name=new_stock_info.author)
+    embed.set_author(name=new_stock_info.author +
+                     ", " + new_stock_info.stock_name)
     return embed
+
+
+async def get_bot_messages(channel):
+    # Read history of discord chat and save the last 10 messages
+    messages = await channel.history(limit=10).flatten()
+
+    # Get only news-bot messages
+    news_bot_messages = []
+    if(len(messages) > 0):
+        [news_bot_messages.append(
+            message) for message in messages if message.author.name == BOT_NAME]
+    return news_bot_messages
 
 
 async def post_news_info():
     await client.wait_until_ready()
     while(True):
-        channel = await get_channel(client.get_all_channels(), CHANNEL_NAME)
+        list_of_searched_stocks = ["WKHS", "AYRO", "GLUU"]
+        for stock in list_of_searched_stocks:
+            # Call stock news and return list of stock info
+            stock_info_list = await fetch_news(stock)
+            # If there is no news, go to next stock
+            if(len(stock_info_list) > 0):
+                stock_info = stock_info_list[0]
+                channel = await get_channel(client.get_all_channels(), "test")
+                news_bot_messages = await get_bot_messages(channel)
 
-        # Read history of discord chat and save the last 10 messages
-        messages = await channel.history(limit=10).flatten()
+                if(stock_info is not None):
+                    if(len(news_bot_messages) == 0):
+                        # print("New post on " + stock_info.stock_name)
+                        await channel.send(embed=create_embed(stock_info))
 
-        # Get only news-bot messages
-        news_bot_messages = []
-        clean_date = ""
-        if(len(messages) > 0):
-            [news_bot_messages.append(
-                message) for message in messages if message.author.name == BOT_NAME]
-
-            list_of_searched_stocks = ["WKHS", "AYRO", "GLUU"]
-            for stock in list_of_searched_stocks:
-                # Call stock news and return list of stock info
-                stock_info_list = await fetch_news(stock)
-
-                # check last article published_at by the bot
-                if(len(news_bot_messages) > 0 and len(stock_info_list) > 0):
-                    # Check through list of stocks and see if stock_name == stock
-                    for discord_message in news_bot_messages:
-                        # if equals stock name, then compare....
-                        if(stock_info_list[0].stock_name == discord_message.stock_name):
-                            # latest discord message is older than stock
-                            latest_stock = stock_info_list[0]
-                            clean_date = get_clean_date(
-                                latest_stock.published_at)
-                            # if any of the published_at in stock info list is newer than the last message in discord chat, then post stock info in chat
-                            if(clean_date > discord_message.created_at):
-                                # Send stock news to discord channel
-                                await channel.send(embed=create_embed(latest_stock))
-            # Play every 10min of seconds
-            await asyncio.sleep(600)
+                    elif(len(news_bot_messages) > 0):
+                        # Check through list of stocks and see if stock_name == stock
+                        for discord_message in news_bot_messages:
+                            # if equals stock name, then compare....
+                            embed_from_message = discord_message.embeds[0]
+                            count = 0
+                            if(stock_info.stock_name in embed_from_message.author.name and get_clean_date(stock_info.published_at) > discord_message.created_at):
+                                count = 1
+                                await channel.send(embed=create_embed(stock_info))
+                        if(count == 0):
+                            await channel.send(embed=create_embed(stock_info))
+        # Play every 10min of seconds
+        await asyncio.sleep(600)
 
 # @bot.command(pass_context=True, aliases=['a'])
 # async def add_stock(ctx, *args):
