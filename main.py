@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 from pyrh import Robinhood
 from datetime import datetime
 from model.news import StockInfo
@@ -30,8 +31,10 @@ rh.login(username=USERNAME,
 
 # Bot commands to add and remove stocks to get news.
 
-# PREFIX = "$"
-# bot = commands.Bot(command_prefix=PREFIX, self_bot=True)
+PREFIX = "."
+bot = commands.Bot(command_prefix=PREFIX)
+
+list_of_searched_stocks = []
 
 
 async def get_channel(channels, channel_name):
@@ -84,7 +87,7 @@ def create_embed(new_stock_info):
 
 async def get_bot_messages(channel):
     # Read history of discord chat and save the last 10 messages
-    messages = await channel.history(limit=10).flatten()
+    messages = await channel.history(limit=20).flatten()
 
     # Get only news-bot messages
     news_bot_messages = []
@@ -109,29 +112,40 @@ async def post_news_info():
 
                 if(stock_info is not None):
                     if(len(news_bot_messages) == 0):
-                        # print("New post on " + stock_info.stock_name)
                         await channel.send(embed=create_embed(stock_info))
-
                     elif(len(news_bot_messages) > 0):
                         # Check through list of stocks and see if stock_name == stock
+                        count = 0
                         for discord_message in news_bot_messages:
                             # if equals stock name, then compare....
-                            embed_from_message = discord_message.embeds[0]
-                            count = 0
-                            if(stock_info.stock_name in embed_from_message.author.name and get_clean_date(stock_info.published_at) > discord_message.created_at):
-                                count = 1
+                            if(len(discord_message.embeds) > 0):
+                                embed_from_message = discord_message.embeds[0]
+                                if(stock_info.stock_name in embed_from_message.author.name):
+                                    if(get_clean_date(stock_info.published_at) > discord_message.created_at):
+                                        await channel.send(embed=create_embed(stock_info))
+                                else:
+                                    count = count + 1
+                            if(count == len(news_bot_messages)):
                                 await channel.send(embed=create_embed(stock_info))
-                        if(count == 0):
-                            await channel.send(embed=create_embed(stock_info))
         # Play every 10min of seconds
         await asyncio.sleep(600)
 
-# @bot.command(pass_context=True, aliases=['a'])
-# async def add_stock(ctx, *args):
+
+@bot.command(pass_context=True)
+async def add(ctx, *args):
+    list_of_searched_stocks.append(*args[0])
+    await ctx.send(*args[0] + "was added to the news list")
 
 
-# @bot.command(pass_context=True, aliases=['r'])
-# async def remove_stock(ctx, *args):
+@bot.command(pass_context=True)
+async def remove(ctx, *args):
+    list_of_searched_stocks.remove(*args[0])
+    await ctx.send(*args[0] + "was removed to the news list")
+
+
+@bot.command(pass_context=True)
+async def stocks(ctx):
+    await ctx.send(list_of_searched_stocks)
 
 
 @client.event
