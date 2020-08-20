@@ -29,12 +29,7 @@ rh.login(username=USERNAME,
          password=PASSWORD,
          qr_code=MFA)
 
-# Bot commands to add and remove stocks to get news.
-
-PREFIX = "."
-bot = commands.Bot(command_prefix=PREFIX)
-
-list_of_searched_stocks = []
+list_of_searched_stocks = ["F", "WKHS", "AYRO", "GLUU"]
 
 
 async def get_channel(channels, channel_name):
@@ -87,7 +82,7 @@ def create_embed(new_stock_info):
 
 async def get_bot_messages(channel):
     # Read history of discord chat and save the last 10 messages
-    messages = await channel.history(limit=20).flatten()
+    messages = await channel.history(limit=100).flatten()
 
     # Get only news-bot messages
     news_bot_messages = []
@@ -100,7 +95,6 @@ async def get_bot_messages(channel):
 async def post_news_info():
     await client.wait_until_ready()
     while(True):
-        list_of_searched_stocks = ["WKHS", "AYRO", "GLUU"]
         for stock in list_of_searched_stocks:
             # Call stock news and return list of stock info
             stock_info_list = await fetch_news(stock)
@@ -128,29 +122,32 @@ async def post_news_info():
                             if(count == len(news_bot_messages)):
                                 await channel.send(embed=create_embed(stock_info))
         # Play every 10min of seconds
-        await asyncio.sleep(600)
-
-
-@bot.command(pass_context=True)
-async def add(ctx, *args):
-    list_of_searched_stocks.append(*args[0])
-    await ctx.send(*args[0] + "was added to the news list")
-
-
-@bot.command(pass_context=True)
-async def remove(ctx, *args):
-    list_of_searched_stocks.remove(*args[0])
-    await ctx.send(*args[0] + "was removed to the news list")
-
-
-@bot.command(pass_context=True)
-async def stocks(ctx):
-    await ctx.send(list_of_searched_stocks)
+        await asyncio.sleep(120)
 
 
 @client.event
-async def on_ready():
-    print("Bot is ready")
+async def on_message(message):
+    await client.wait_until_ready()
+    channel = await get_channel(client.get_all_channels(), "test")
+    # do some extra stuff here
+    print("I'm here")
+    if(message.content.startswith(".add")):
+        msg = message.content.split()
+        if(msg[1] not in list_of_searched_stocks):
+            list_of_searched_stocks.append(msg[1])
+            await channel.send(msg[1] + " was added to watch list!")
+        else:
+            await channel.send(msg[1] + " is already in watch list!")
+    elif(message.content.startswith(".remove")):
+        msg = message.content.split()
+        list_of_searched_stocks.remove(msg[1])
+        await channel.send(msg[1] + " was removed to watch list!")
+    elif(message.content.startswith(".list")):
+        output = ''
+        for stock in list_of_searched_stocks:
+            output += stock
+            output += "\n"
+        await channel.send("Stocks that are being watched:\n" + output)
 
 
 client.loop.create_task(post_news_info())
