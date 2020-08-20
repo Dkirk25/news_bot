@@ -29,7 +29,7 @@ rh.login(username=USERNAME,
          password=PASSWORD,
          qr_code=MFA)
 
-list_of_searched_stocks = ["F", "WKHS", "AYRO", "GLUU"]
+list_of_searched_stocks = ["GEVO", "F", "WKHS", "AYRO", "GLUU"]
 
 
 async def get_channel(channels, channel_name):
@@ -40,8 +40,6 @@ async def get_channel(channels, channel_name):
 
 
 async def fetch_news(stock):
-    print("Getting news\n")
-
     stock_to_search = stock
     news = rh.get_news(stock_to_search)
     info_results = news["results"]
@@ -92,9 +90,17 @@ async def get_bot_messages(channel):
     return news_bot_messages
 
 
+def remove_empty_embed_messages(dirty_messages):
+    clean_discord_messages = []
+    [clean_discord_messages.append(message) for message in dirty_messages if len(
+        message.embeds) > 0 and message.embeds[0] is not None]
+    return clean_discord_messages
+
+
 async def post_news_info():
     await client.wait_until_ready()
     while(True):
+        print(list_of_searched_stocks)
         for stock in list_of_searched_stocks:
             # Call stock news and return list of stock info
             stock_info_list = await fetch_news(stock)
@@ -102,7 +108,8 @@ async def post_news_info():
             if(len(stock_info_list) > 0):
                 stock_info = stock_info_list[0]
                 channel = await get_channel(client.get_all_channels(), "test")
-                news_bot_messages = await get_bot_messages(channel)
+                dirty_list = await get_bot_messages(channel)
+                news_bot_messages = remove_empty_embed_messages(dirty_list)
 
                 if(stock_info is not None):
                     if(len(news_bot_messages) == 0):
@@ -112,20 +119,19 @@ async def post_news_info():
                         count = 0
                         for discord_message in news_bot_messages:
                             # if equals stock name, then compare....
-                            if(len(discord_message.embeds) > 0):
-                                embed_from_message = discord_message.embeds[0]
-                                if(stock_info.stock_name in embed_from_message.author.name):
-                                    if(get_clean_date(stock_info.published_at) > discord_message.created_at):
-                                        await channel.send(embed=create_embed(stock_info))
-                                else:
-                                    count = count + 1
-                            if(count == len(news_bot_messages)):
-                                await channel.send(embed=create_embed(stock_info))
+                            embed_from_message = discord_message.embeds[0]
+                            if(stock_info.stock_name in embed_from_message.author.name):
+                                if(get_clean_date(stock_info.published_at) > discord_message.created_at):
+                                    await channel.send(embed=create_embed(stock_info))
+                            else:
+                                count = count + 1
+                        if(count == len(news_bot_messages)):
+                            await channel.send(embed=create_embed(stock_info))
         # Play every 10min of seconds
-        await asyncio.sleep(120)
+        await asyncio.sleep(20)
 
 
-@client.event
+@ client.event
 async def on_message(message):
     await client.wait_until_ready()
     channel = await get_channel(client.get_all_channels(), "test")
