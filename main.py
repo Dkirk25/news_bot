@@ -56,7 +56,7 @@ async def post_news_info():
                         if(count == len(news_bot_messages)):
                             await channel.send(embed=discord_helper.create_embed(stock_info))
         # Play every 10min of seconds
-        await asyncio.sleep(20)
+        await asyncio.sleep(600)
 
 
 @ client.event
