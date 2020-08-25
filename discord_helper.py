@@ -10,7 +10,8 @@ def create_embed(new_stock_info):
     embed = discord.Embed(
         title=new_stock_info.title,
         description=new_stock_info.text,
-        url=new_stock_info.url
+        url=new_stock_info.url,
+        timestamp=get_clean_date(new_stock_info.published_at)
     )
     embed.set_author(name=new_stock_info.author +
                      ", " + new_stock_info.stock_name)
