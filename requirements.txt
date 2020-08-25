@@ -13,5 +13,4 @@ pyotp
 robin-stocks
 pyrh
 pytz
-timezone
 python-dotenv
