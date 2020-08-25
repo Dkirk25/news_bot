@@ -1,5 +1,6 @@
 import discord
 from datetime import datetime
+from pytz import timezone
 import os
 
 BOT_NAME = os.getenv("BOT_NAME")
@@ -28,6 +29,10 @@ async def get_bot_messages(channel):
     return remove_empty_embed_messages(news_bot_messages)
 
 
+def is_valid_date(stock_info_date, discord_message_date):
+    return get_clean_date(stock_info_date).astimezone(timezone('US/Central')) > discord_message_date.astimezone(timezone('US/Central'))
+
+
 def remove_empty_embed_messages(dirty_messages):
     clean_discord_messages = []
     [clean_discord_messages.append(message) for message in dirty_messages if len(
@@ -42,3 +47,19 @@ def get_clean_date(dirty_date):
     stock_date = datetime.strptime(
         clean_date, '%Y/%m/%d %H:%M:%S')
     return stock_date
+
+
+def is_stock_info_already_posted(stock_info, list_of_messages):
+    list_of_embed_messages = []
+    [list_of_embed_messages.append(message.embeds[0]) for message in list_of_messages if len(
+        message.embeds) > 0 and message.embeds[0] is not None]
+
+    filtered_stock_list = list(filter(
+        lambda x: stock_info.stock_name in x.author.name, list_of_embed_messages))
+
+    filtered_even_more = list(filter(
+        lambda x: stock_info.title in x.title, filtered_stock_list))
+
+    if(len(filtered_even_more) == 0):
+        return True
+    return False

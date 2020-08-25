@@ -18,12 +18,17 @@ load_dotenv(override=True)
 
 client = discord.Client()
 
-list_of_searched_stocks = ["GEVO", "Tesla", "WKHS", "AYRO", "GLUU"]
+list_of_searched_stocks = []
 
 
 def get_channel():
     channel_id = int(os.getenv("CHANNEL_ID"))
     return client.get_channel(channel_id)
+
+
+async def validate_stock(channel, stock_info, list_discord_messages):
+    if discord_helper.is_stock_info_already_posted(stock_info, list_discord_messages):
+        await channel.send(embed=discord_helper.create_embed(stock_info))
 
 
 async def post_news_info():
@@ -40,23 +45,9 @@ async def post_news_info():
                 news_bot_messages = await discord_helper.get_bot_messages(channel)
 
                 if(stock_info is not None):
-                    if(len(news_bot_messages) == 0):
-                        await channel.send(embed=discord_helper.create_embed(stock_info))
-                    elif(len(news_bot_messages) > 0):
-                        # Check through list of stocks and see if stock_name == stock
-                        count = 0
-                        for discord_message in news_bot_messages:
-                            # if equals stock name, then compare....
-                            embed_from_message = discord_message.embeds[0]
-                            if(stock_info.stock_name in embed_from_message.author.name):
-                                if(discord_helper.get_clean_date(stock_info.published_at) > discord_message.created_at):
-                                    await channel.send(embed=discord_helper.create_embed(stock_info))
-                            else:
-                                count = count + 1
-                        if(count == len(news_bot_messages)):
-                            await channel.send(embed=discord_helper.create_embed(stock_info))
+                    await validate_stock(channel, stock_info, news_bot_messages)
         # Play every 10min of seconds
-        await asyncio.sleep(600)
+        await asyncio.sleep(300)
 
 
 @ client.event
@@ -66,8 +57,6 @@ async def on_message(message):
     if (message.author.bot):
         return
     channel = get_channel()
-    # do some extra stuff here
-    print("I'm here")
     if(message.content.startswith(".add")):
         msg = message.content.split()
         if(msg[1] not in list_of_searched_stocks):
