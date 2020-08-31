@@ -69,8 +69,8 @@ async def on_message(message):
         await channel.send(msg[1] + " was removed from the watch list!")
     elif(message.content.startswith(".list")):
         output = ''
-        list_of_searched_stocks = database.get_stocks()
-        for stock in list_of_searched_stocks:
+        stock_list = database.get_stocks()
+        for stock in stock_list:
             output += stock
             output += "\n"
         await channel.send("Stocks that are being watched:\n" + output)
