@@ -19,8 +19,6 @@ load_dotenv(override=True)
 
 client = discord.Client()
 
-list_of_searched_stocks = []
-
 
 def get_channel():
     channel_id = int(os.getenv("CHANNEL_ID"))
@@ -36,7 +34,6 @@ async def post_news_info():
     await client.wait_until_ready()
     while(True):
         list_of_searched_stocks = database.get_stocks()
-        print(list_of_searched_stocks)
         for stock in list_of_searched_stocks:
             # Call stock news and return list of stock info
             stock_info_list = await stock_helper.fetch_news(stock)
@@ -69,8 +66,8 @@ async def on_message(message):
         await channel.send(msg[1] + " was removed from the watch list!")
     elif(message.content.startswith(".list")):
         output = ''
-        stock_list = database.get_stocks()
-        for stock in stock_list:
+        list_of_searched_stocks = database.get_stocks()
+        for stock in list_of_searched_stocks:
             output += stock
             output += "\n"
         await channel.send("Stocks that are being watched:\n" + output)
