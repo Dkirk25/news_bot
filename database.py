@@ -30,6 +30,8 @@ def get_stocks():
     list_of_stocks = []
     for doc in docs:
         list_of_stocks.append(doc.id)
-        print(f'{doc.id} => {doc.to_dict()}')
     return list_of_stocks
-    # print(f'{doc.id} => {doc.to_dict()}')
+
+
+def remove_stock(stock_name):
+    db.collection(u'stocks').document(stock_name).delete()

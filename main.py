@@ -4,6 +4,7 @@ from pyrh import Robinhood
 from datetime import datetime
 from model.news import StockInfo
 import stock_helper
+import database
 import discord_helper
 import sys
 import numpy as np
@@ -34,6 +35,7 @@ async def validate_stock(channel, stock_info, list_discord_messages):
 async def post_news_info():
     await client.wait_until_ready()
     while(True):
+        list_of_searched_stocks = database.get_stocks()
         print(list_of_searched_stocks)
         for stock in list_of_searched_stocks:
             # Call stock news and return list of stock info
@@ -59,17 +61,15 @@ async def on_message(message):
     channel = get_channel()
     if(message.content.startswith(".add")):
         msg = message.content.split()
-        if(msg[1] not in list_of_searched_stocks):
-            list_of_searched_stocks.append(msg[1].upper())
-            await channel.send(msg[1].upper() + " was added to watch list!")
-        else:
-            await channel.send(msg[1] + " is already in watch list!")
+        database.add_stock(msg[1].upper())
+        await channel.send(msg[1].upper() + " was added to watch list!")
     elif(message.content.startswith(".remove")):
         msg = message.content.split()
-        list_of_searched_stocks.remove(msg[1])
-        await channel.send(msg[1] + " was removed to watch list!")
+        database.remove_stock(msg[1])
+        await channel.send(msg[1] + " was removed from the watch list!")
     elif(message.content.startswith(".list")):
         output = ''
+        list_of_searched_stocks = database.get_stocks()
         for stock in list_of_searched_stocks:
             output += stock
             output += "\n"

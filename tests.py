@@ -40,7 +40,7 @@ class TestSum(unittest.TestCase):
 
     def test_create_collection(self):
         list_of_stocks = database.get_stocks()
-        self.assertEquals(list_of_stocks[0], "TLSA")
+        self.assertEquals(list_of_stocks[0], "TSLA")
 
     # def test_stock_date_newer_than_discord(self):
     #     stock = datetime(2020, 8, 21, 15, 24, 33)
