@@ -20,6 +20,7 @@ Requirements
 # Discord
 TOKEN=
 CHANNEL_ID=
+BOT_NAME=
 
 # Firebase
 FIREBASE_KEY=
