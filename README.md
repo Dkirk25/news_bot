@@ -14,9 +14,11 @@ Requirements
 - Need to generate a private key in Firebase project.
 - Set the variable to the path of the private_key.json
 
-3. Create a `.env`
+3. Run `scripts/setup.sh` to create the missing project files `.env` and your firebase key JSON. Your env should contain the variables listed in the example below
 
 ```
+# Example ENV
+
 # Discord
 TOKEN=
 CHANNEL_ID=
@@ -34,7 +36,12 @@ MFA=
 POLL_INTERVAL=600
 ```
 
-4. Run `python main.py`
+4. Test run your project locally with `python main.py`
+
+# Using Docker Container
+
+1. complete setup/installation
+2. run `scripts/start.sh`
 
 # Bot Commands
 
