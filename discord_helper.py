@@ -34,7 +34,7 @@ async def get_bot_messages(channel):
     if(len(messages) > 0):
         [news_bot_messages.append(
             message) for message in messages if message.author.name == BOT_NAME]
-    return remove_empty_embed_messages(news_bot_messages)
+    return await remove_empty_embed_messages(news_bot_messages)
 
 
 async def remove_empty_embed_messages(dirty_messages):
