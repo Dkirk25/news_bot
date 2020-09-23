@@ -80,7 +80,7 @@ async def on_message(message):
         await channel.send("Here are the commands:\n" + output)
     elif(message.content.startswith(".purge")):
         non_bot_messages = await discord_helper.get_non_bot_messages(channel)
-        await message.channel.delete_messages(non_bot_messages)
+        await discord_helper.delete_messages_channel(message.channel, non_bot_messages)
 
 
 client.loop.create_task(post_news_info())

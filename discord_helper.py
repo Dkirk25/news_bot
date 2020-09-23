@@ -18,6 +18,21 @@ def create_embed(new_stock_info):
     return embed
 
 
+async def delete_messages_channel(channel, list_of_messages):
+    try:
+        await channel.delete_messages(list_of_messages)
+    except Exception as e:
+        print("Error: ", e, "Occurred.")
+        print("Deleting one by one...")
+        print(len(list_of_messages))
+        for msg in list_of_messages:
+            try:
+                await msg.delete()
+            except Exception as e:
+                pass
+        print("done")
+
+
 async def get_non_bot_messages(channel):
     messages = await channel.history(limit=100).flatten()
     non_bot_messages = []

@@ -2,6 +2,8 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import os
+from dotenv import load_dotenv
+load_dotenv(override=True)
 
 # Use a service account
 cred = credentials.Certificate(os.getenv("FIREBASE_KEY"))
