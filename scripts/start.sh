@@ -1,4 +1,4 @@
 #!/bin/bash
 
 docker build . -t newsbotapp
-docker run -it -d newsbotapp:latestdock
+docker run -it -d newsbotapp:latest
