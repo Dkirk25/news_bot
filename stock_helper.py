@@ -20,6 +20,7 @@ async def fetch_news(stock):
     stock_to_search = stock
     clean_stock_list = []
     try:
+        # Change get_news to read from alpha seeking
         news = rh.get_news(stock_to_search)
         info_results = news["results"]
         for i in info_results:
