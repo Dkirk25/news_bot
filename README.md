@@ -32,6 +32,9 @@ USERNAME=
 PASSWORD=
 MFA=
 
+# News API
+NEWS_API_KEY=
+
 # Poll data every 10 minutes
 POLL_INTERVAL=600
 ```
@@ -55,6 +58,8 @@ POLL_INTERVAL=600
 
 - Discord
 - Firebase
+- News API
+  · https://newsapi.org/docs/client-libraries/python
 - Robinhood Unofficial API (pyrh)
   · https://github.com/robinhood-unofficial/pyrh
 

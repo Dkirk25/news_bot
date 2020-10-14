@@ -1,36 +1,39 @@
-from bs4 import BeautifulSoup
-from selenium import webdriver
-import chromedriver_binary
 import json
-import time
+from newsapi import NewsApiClient
+from datetime import datetime as dt
+import os
+from dotenv import load_dotenv
+load_dotenv(override=True)
 
-op = webdriver.ChromeOptions()
-op.add_argument('headless')
-driver = webdriver.Chrome(options=op)
-
-html = driver.page_source
+key = os.getenv("NEWS_API_KEY")
+newsapi = NewsApiClient(api_key=key)
 
 def get_news(stock):
-    time.sleep(30)
-    url = 'https://seekingalpha.com/symbol/'+ stock +'/news'
-    driver.get(url)
-    html = driver.page_source
-    soup = BeautifulSoup(html,features="lxml")
-
-    # Get list of atricles
-    dirty_news_article =  soup.find_all(attrs={"class": "a36d8-2-Y79"})[0]
+    top_headlines = newsapi.get_everything(q=stock)['articles']
+    top_headlines.sort(key=extract_time, reverse=True)
+    latest_article = top_headlines[0]
     data = {}
 
-    data['uuid'] = "None"
+    data['uuid'] = latest_article['source']['id']
     #Title
-    data['title'] = soup.find(attrs={"class": "_66147-2pxC0 _7e758-JdZFq _7e758-SfA3O _7e758-1Ou5t"}).contents[0]
+    data['title'] = latest_article['title']
     #Description
-    data['preview_text'] = dirty_news_article.contents[0].next_element.text
+    data['preview_text'] = latest_article['description']
     # Source
-    data['source'] = dirty_news_article.contents[0].next_sibling.next.text
+    data['source'] = latest_article['source']['name']
     # published_at
-    data['published_at'] = dirty_news_article.contents[0].next_sibling.next.next_sibling.text
+    data['published_at'] = latest_article['publishedAt']
     # URL
-    data['url'] = dirty_news_article.contents[0].next_element.attrs['href']  
-    # add it to a new list
+    data['url'] = latest_article['url']
+    filtered_stock_list = list(filter(lambda x: "Seeking Alpha" in x['source']['name'], top_headlines))
     return json.loads(json.dumps(data))
+
+
+def extract_time(json):
+    try:
+        # Also convert to int since update_time will be string.  When comparing
+        # strings, "10" is smaller than "2".
+        json_date = dt.strptime(json['publishedAt'],"%Y-%m-%dT%H:%M:%SZ")
+        return json_date
+    except KeyError:
+        return 0

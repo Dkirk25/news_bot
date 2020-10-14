@@ -9,7 +9,7 @@ class TestSum(unittest.TestCase):
         news = alpha_seeking.get_news("WKHS")
 
         print(news)
-        self.assertEqual("Workhorse Group Inc.", news["title"])
+        self.assertEqual("WKHS downgraded by Roth Capital analyst", news["title"])
 
 
 if __name__ == '__main__':
