@@ -16,3 +16,9 @@ python-dotenv
 firebase_admin
 credentials
 firestore
+chromedriver_binary
+selenium
+webdriver
+BeautifulSoup
+bs4
+json
