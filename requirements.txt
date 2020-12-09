@@ -13,6 +13,7 @@ robin-stocks
 pyrh
 pytz
 python-dotenv
+grpcio-tools
 firebase_admin
 credentials
 firestore
