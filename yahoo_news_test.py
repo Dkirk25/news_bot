@@ -10,7 +10,8 @@ class TestSum(unittest.TestCase):
         news = yahoo_news.get_news("WKHS")
 
         print(news)
-        self.assertEqual("horse -9% with USPS said to delaying big contract decision", news)
+        self.assertEqual("Benzinga", news.author)
+        self.assertEqual("Shares of Workhorse Group (NASDAQ: WKHS) saw some unusual options activity on Friday. Following the unusual option alert, the stock price moved up to $21.95", news.text)
 
 
 if __name__ == '__main__':

@@ -49,7 +49,7 @@ async def post_news_info():
         await asyncio.sleep(int(os.getenv("POLL_INTERVAL", "600")))
 
 
-@ client.event
+@client.event
 async def on_message(message):
     await client.wait_until_ready()
 
