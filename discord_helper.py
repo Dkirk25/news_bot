@@ -1,6 +1,7 @@
 import discord
 from datetime import datetime
 from pytz import timezone
+from dateutil import parser
 import os
 
 BOT_NAME = os.getenv("BOT_NAME")
@@ -60,11 +61,12 @@ async def remove_empty_embed_messages(dirty_messages):
 
 
 def get_clean_date(dirty_date):
-    clean_date = dirty_date.replace(
-        "-", "/").replace("T", " ").replace("Z", "")
-    print(clean_date)
+    # clean_date = dirty_date.replace(
+    #     "-", "/").replace("T", " ").replace("Z", "")
+    # print(clean_date)
+    clean_date = parser.parse(dirty_date)
     stock_date = datetime.strptime(
-        clean_date, '%Y/%m/%d %H:%M:%S')
+        str(clean_date), '%Y-%m-%d %H:%M:%S')
     return stock_date
 
 

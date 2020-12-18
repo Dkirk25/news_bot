@@ -12,7 +12,6 @@ def get_news(stock):
     url = f"https://finance.yahoo.com/quote/{stock}/news?p={stock}"
     with requests.get(url, stream=True) as page:
 
-        # page = requests.get(url)
         soup = BeautifulSoup(page.content, PARSER)
 
         latest_news_article = soup.find(id="latestQuoteNewsStream-0-Stream").contents[0].contents[0]
