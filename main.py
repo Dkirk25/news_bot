@@ -3,9 +3,9 @@ import discord
 from pyrh import Robinhood
 from datetime import datetime
 from model.news import StockInfo
-import stock_helper
+from stock_helper import StockHelper
 import database
-import discord_helper
+from discord_helper import DiscordHelper
 import sys
 import numpy as np
 import tulipy as ti
@@ -18,6 +18,8 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 client = discord.Client()
+discord_helper = DiscordHelper()
+stock_helper = StockHelper()
 
 
 def get_channel():
@@ -49,7 +51,7 @@ async def post_news_info():
         await asyncio.sleep(int(os.getenv("POLL_INTERVAL", "600")))
 
 
-@ client.event
+@client.event
 async def on_message(message):
     await client.wait_until_ready()
 
