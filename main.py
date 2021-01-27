@@ -17,9 +17,10 @@ import asyncio
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
-client = discord.Client()
 discord_helper = DiscordHelper()
 stock_helper = StockHelper()
+
+client = discord.Client()
 
 
 def get_channel():
