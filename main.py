@@ -33,22 +33,25 @@ async def validate_stock(channel, stock_info, list_discord_messages):
 
 
 async def post_news_info():
-    await client.wait_until_ready()
-    while(True):
-        list_of_searched_stocks = database.get_stocks()
-        for stock in list_of_searched_stocks:
-            # Call stock news and return list of stock info
-            stock_info_list = await stock_helper.fetch_news(stock)
-            # If there is no news, go to next stock
-            if(len(stock_info_list) > 0):
-                stock_info = stock_info_list[0]
-                channel = get_channel()
-                news_bot_messages = await discord_helper.get_bot_messages(channel)
+    try:
+        await client.wait_until_ready()
+        while(True):
+            list_of_searched_stocks = database.get_stocks()
+            for stock in list_of_searched_stocks:
+                # Call stock news and return list of stock info
+                stock_info_list = await stock_helper.fetch_news(stock)
+                # If there is no news, go to next stock
+                if(len(stock_info_list) > 0):
+                    stock_info = stock_info_list[0]
+                    channel = get_channel()
+                    news_bot_messages = await discord_helper.get_bot_messages(channel)
 
-                if(stock_info is not None):
-                    await validate_stock(channel, stock_info, news_bot_messages)
-        # Play every 10min of seconds
-        await asyncio.sleep(int(os.getenv("POLL_INTERVAL", "600")))
+                    if(stock_info is not None):
+                        await validate_stock(channel, stock_info, news_bot_messages)
+            # Play every 10min of seconds
+            await asyncio.sleep(int(os.getenv("POLL_INTERVAL", "600")))
+    except Exception as ex:
+        print(ex)
 
 
 @client.event
