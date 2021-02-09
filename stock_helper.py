@@ -1,6 +1,8 @@
 from pyrh import Robinhood
 import pyotp
 import os
+import time
+from datetime import date, timedelta
 from dotenv import load_dotenv
 from model.news import StockInfo
 load_dotenv(override=True)
@@ -12,15 +14,19 @@ class StockHelper:
         USERNAME = os.getenv("USERNAME")
         PASSWORD = os.getenv("PASSWORD")
 
-        pyotp.TOTP(MFA).now()
+        self._future_date = date.today() + timedelta(5)
+
         self._rh = Robinhood()
         self._rh.login(username=USERNAME,
                        password=PASSWORD,
                        qr_code=MFA)
 
-    async def fetch_news(self, stock):
+    def fetch_news(self, stock):
         stock_to_search = stock
         clean_stock_list = []
+        if(self.is_time_to_reauthenticate(date.today())):
+            self._rh.relogin_oauth2()
+
         try:
             news = self._rh.get_news(stock_to_search)
             info_results = news["results"]
@@ -35,3 +41,9 @@ class StockHelper:
             print("Skipping...")
             print()
         return clean_stock_list
+
+    def is_time_to_reauthenticate(self, now):
+        if(now == self._future_date):
+            self._future_date = date.today() + timedelta(5)
+            return True
+        return False

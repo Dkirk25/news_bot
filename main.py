@@ -1,17 +1,12 @@
 from discord.ext import commands
 import discord
-from pyrh import Robinhood
 from datetime import datetime
-from model.news import StockInfo
 from stock_helper import StockHelper
 import database
 from discord_helper import DiscordHelper
 import sys
-import numpy as np
-import tulipy as ti
 import schedule
 import time
-import pyotp
 import os
 import asyncio
 from dotenv import load_dotenv
@@ -28,11 +23,6 @@ def get_channel():
     return client.get_channel(channel_id)
 
 
-async def validate_stock(channel, stock_info, list_discord_messages):
-    if discord_helper.is_stock_info_already_posted(stock_info, list_discord_messages):
-        await channel.send(embed=discord_helper.create_embed(stock_info))
-
-
 async def post_news_info():
     try:
         await client.wait_until_ready()
@@ -47,8 +37,8 @@ async def post_news_info():
                     channel = get_channel()
                     news_bot_messages = await discord_helper.get_bot_messages(channel)
 
-                    if(stock_info is not None):
-                        await validate_stock(channel, stock_info, news_bot_messages)
+                    if(stock_info is not None and discord_helper.is_stock_info_already_posted(stock_info, news_bot_messages)):
+                        await channel.send(embed=discord_helper.create_embed(stock_info))
             # Play every 10min of seconds
             await asyncio.sleep(int(os.getenv("POLL_INTERVAL", "600")))
     except Exception as ex:
