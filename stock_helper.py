@@ -21,7 +21,7 @@ class StockHelper:
                        password=PASSWORD,
                        qr_code=MFA)
 
-    def fetch_news(self, stock):
+    async def fetch_news(self, stock):
         stock_to_search = stock
         clean_stock_list = []
         if(self.is_time_to_reauthenticate(date.today())):
