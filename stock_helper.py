@@ -44,7 +44,7 @@ class StockHelper:
                                        i["preview_text"].replace("\n\n", ""), i["url"], stock_to_search)
                 # print(str(stock_info))
                 clean_stock_list.append(stock_info)
-            # print(stock_to_search + " = " + str(clean_stock_list[0]))
+            print(stock_to_search + " = " + str(clean_stock_list[0]))
         except Exception as e:
             print("Error: ", e, "Occurred.")
             print("Skipping...")

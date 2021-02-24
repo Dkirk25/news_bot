@@ -11,6 +11,4 @@ grpcio-tools
 firebase_admin
 credentials
 firestore
-date
-timedelta
 datetime
