@@ -14,7 +14,6 @@ load_dotenv(override=True)
 
 discord_helper = DiscordHelper()
 stock_helper = StockHelper()
-
 client = discord.Client()
 
 
@@ -78,6 +77,11 @@ async def on_message(message):
         non_bot_messages = await discord_helper.get_non_bot_messages(channel)
         await discord_helper.delete_messages_channel(message.channel, non_bot_messages)
 
-
-client.loop.create_task(post_news_info())
-client.run(os.getenv("TOKEN"))
+while True:
+    try:
+        client.loop.create_task(post_news_info())
+        client.run(os.getenv("TOKEN"))
+    except Exception as e:
+        print(f'Restarting in 10s\nError: {e}')
+        time.sleep(10)
+        client = discord.Client()
