@@ -32,6 +32,9 @@ USERNAME=
 PASSWORD=
 MFA=
 
+#Switch between Robinhood and Yahoo News
+USE_ROBINHOOD=N or Y
+
 # Poll data every 10 minutes
 POLL_INTERVAL=600
 ```
