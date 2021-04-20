@@ -12,3 +12,5 @@ firebase_admin
 credentials
 firestore
 datetime
+bs4
+requests
