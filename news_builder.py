@@ -1,5 +1,5 @@
 
-from stock_helper import StockHelper
+from robinhood_helper import RobinhoodHelper
 from yahoo_news import YahooHelper
 import os
 from dotenv import load_dotenv
@@ -12,7 +12,7 @@ class NewsBuilder:
 
     def get_news_helper(self):
         if self.indicator == "Y":
-            return StockHelper()
+            return RobinhoodHelper()
         elif self.indicator == "N":
             return YahooHelper()
         else:

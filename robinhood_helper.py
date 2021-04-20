@@ -14,7 +14,7 @@ USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
 
 
-class StockHelper:
+class RobinhoodHelper:
     def __init__(self):
         self._future_date = date.today() + timedelta(5)
 
@@ -36,12 +36,7 @@ class StockHelper:
             info_results = news["results"]
 
             for i in info_results:
-                TWOPLACES = decimal.Decimal(10) ** -2
-                price = str(
-                    self._rh.last_trade_price(stock)[0][0])
-
-                stock_price = str(decimal.Decimal(price).quantize(TWOPLACES))
-                print(stock_price)
+                stock_price = format_decimal_price(stock)
                 stock_info = StockInfo(i["uuid"], i["title"], i["source"], i["published_at"],
                                        i["preview_text"].replace("\n\n", ""), i["url"], stock_to_search, stock_price)
                 clean_stock_list.append(stock_info)
@@ -57,3 +52,9 @@ class StockHelper:
             self._future_date = date.today() + timedelta(5)
             return True
         return False
+
+    def format_decimal_price(self, stock):
+        TWOPLACES = decimal.Decimal(10) ** -2
+        price = str(self._rh.last_trade_price(stock)[0][0])
+
+        return str(decimal.Decimal(price).quantize(TWOPLACES))
