@@ -16,7 +16,7 @@ class DiscordHelper:
             timestamp=self.get_clean_date(new_stock_info.published_at)
         )
         embed.set_author(name=new_stock_info.author +
-                         ", " + new_stock_info.stock_name)
+                         ", " + new_stock_info.stock_name+" (" + new_stock_info.stock_price + ")")
         return embed
 
     async def delete_messages_channel(self, channel, list_of_messages):
@@ -59,10 +59,15 @@ class DiscordHelper:
     def get_clean_date(self, dirty_date):
         clean_date = dirty_date.replace(
             "-", "/").replace("T", " ").replace("Z", "")
-        print(clean_date)
-        stock_date = datetime.strptime(
-            clean_date, '%Y/%m/%d %H:%M:%S')
-        return stock_date
+
+        stock_date = ""
+
+        if("/" in clean_date):
+            stock_date = datetime.strptime(clean_date, '%Y/%m/%d %H:%M:%S')
+        else:
+            stock_date = datetime.strptime(clean_date, '%B %d, %Y, %H:%M %p')
+
+        return datetime(stock_date.year, stock_date.month, stock_date.day, stock_date.hour, stock_date.minute, tzinfo=timezone("US/Central"))
 
     def is_stock_info_already_posted(self, stock_info, list_of_messages):
         list_of_embed_messages = []
