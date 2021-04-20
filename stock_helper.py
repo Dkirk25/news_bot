@@ -5,43 +5,14 @@ import time
 from datetime import date, timedelta
 from dotenv import load_dotenv
 from model.news import StockInfo
-<<<<<<< HEAD
-import yahoo_news
-=======
 import json
->>>>>>> 2ed6b2eeae82727c3d488c96a86d8e71fbb11f0b
+import decimal
 load_dotenv(override=True)
 
-# MFA = os.getenv("MFA")
-# USERNAME = os.getenv("USERNAME")
-# PASSWORD = os.getenv("PASSWORD")
+MFA = os.getenv("MFA")
+USERNAME = os.getenv("USERNAME")
+PASSWORD = os.getenv("PASSWORD")
 
-<<<<<<< HEAD
-# totp = pyotp.TOTP(MFA).now()
-# rh = Robinhood()
-# rh.login(username=USERNAME,
-#          password=PASSWORD,
-#          qr_code=MFA)
-
-
-async def fetch_news(stock):
-    stock_to_search = stock
-    clean_stock_list = []
-    try:
-        news = yahoo_news.get_news(stock_to_search)
-        # info_results = news["results"]
-        # for i in info_results:
-        #     stock_info = StockInfo(i["uuid"], i["title"], i["source"], i["published_at"],
-        #                            i["preview_text"].replace("\n\n", ""), i["url"], stock_to_search)
-            # print(str(stock_info))
-        clean_stock_list.append(news)
-        print(stock_to_search + " = " + str(len(clean_stock_list)))
-    except Exception as e:
-        print("Error: ", e, "Occurred.")
-        print("Skipping...")
-        print()
-    return clean_stock_list
-=======
 
 class StockHelper:
     def __init__(self):
@@ -64,15 +35,15 @@ class StockHelper:
             news = self._rh.get_news(stock_to_search)
             info_results = news["results"]
 
-            # json_formatted_str = json.dumps(info_results, indent=2)
-            # print(json_formatted_str)
-
             for i in info_results:
-                # print("This is preview text: " +
-                #       i["preview_text"])
+                TWOPLACES = decimal.Decimal(10) ** -2
+                price = str(
+                    self._rh.last_trade_price(stock)[0][0])
+
+                stock_price = str(decimal.Decimal(price).quantize(TWOPLACES))
+                print(stock_price)
                 stock_info = StockInfo(i["uuid"], i["title"], i["source"], i["published_at"],
-                                       i["preview_text"].replace("\n\n", ""), i["url"], stock_to_search)
-                # print(str(stock_info))
+                                       i["preview_text"].replace("\n\n", ""), i["url"], stock_to_search, stock_price)
                 clean_stock_list.append(stock_info)
             print(stock_to_search + " = " + str(clean_stock_list[0]))
         except Exception as e:
@@ -86,4 +57,3 @@ class StockHelper:
             self._future_date = date.today() + timedelta(5)
             return True
         return False
->>>>>>> 2ed6b2eeae82727c3d488c96a86d8e71fbb11f0b

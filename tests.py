@@ -23,13 +23,25 @@ class TestSum(unittest.TestCase):
     #     print(test_date)
     #     self.assertTrue(stock < test_date)
 
-    def test_fetch_WHKS_news(self):
-        news = []
-        news = stock_helper.fetch_news("TSLA")[0]
+    # def test_date_format(self):
+    #     dummy_date = "April 19, 2021, 10:05 AM"
+    #     dt = datetime.strptime(dummy_date, "%B %d, %Y, %H:%M %p")
+    #     print(dt)
+    #     self.assertTrue(dt)
 
-        print(news)
-        self.assertIsNotNone(news)
+    # def test_date_format(self):
+    #     dummy_date = "2021/04/16 18:55:00"
+    #     dt = datetime.strptime(dummy_date, '%Y/%m/%d %H:%M:%S')
+    #     print(dt)
+    #     self.assertEqual(" ", dt)
 
+    # 2021/04/16 18:55:00
 
+    # def test_fetch_WHKS_news(self):
+    #     news = []
+    #     news = stock_helper.fetch_news("TSLA")[0]
+
+    #     print(news)
+    #     self.assertIsNotNone(news)
 if __name__ == '__main__':
     unittest.main()

@@ -1,9 +1,8 @@
 from discord.ext import commands
 import discord
-from datetime import datetime
-from stock_helper import StockHelper
 import database
 from discord_helper import DiscordHelper
+from news_builder import NewsBuilder
 import sys
 import schedule
 import time
@@ -13,8 +12,8 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 discord_helper = DiscordHelper()
-stock_helper = StockHelper()
 client = discord.Client()
+factory = NewsBuilder().get_news_helper()
 
 
 def get_channel():
@@ -29,7 +28,7 @@ async def post_news_info():
             list_of_searched_stocks = database.get_stocks()
             for stock in list_of_searched_stocks:
                 # Call stock news and return list of stock info
-                stock_info_list = stock_helper.fetch_news(stock)
+                stock_info_list = factory.fetch_news(stock)
                 # If there is no news, go to next stock
                 if(len(stock_info_list) > 0):
                     stock_info = stock_info_list[0]
