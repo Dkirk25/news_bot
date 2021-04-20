@@ -54,6 +54,6 @@ class YahooHelper:
 
     def get_time_of_article(self, new_url):
         page = requests.get(new_url)
-        soup = BeautifulSoup(page.content, PARSER)
+        soup = BeautifulSoup(page.content, self.parser)
 
         return soup.time.text
