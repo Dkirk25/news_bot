@@ -8,7 +8,7 @@ load_dotenv(override=True)
 
 class NewsBuilder:
     def __init__(self):
-        self.indicator = os.getenv("USE_ROBINHOOD", "N")
+        self.indicator = os.getenv("USE_ROBINHOOD", "Y")
 
     def get_news_helper(self):
         if self.indicator == "Y":

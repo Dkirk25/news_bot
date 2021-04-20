@@ -2,12 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 from model.news import StockInfo
-import os
 
 
 class YahooHelper:
     def __init__(self):
-        self.indicator = os.getenv("USE_ROBINHOOD", "N")
         self.parser = 'html.parser'
 
     def fetch_news(self, stock):
