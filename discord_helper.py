@@ -1,7 +1,6 @@
 import discord
 from datetime import datetime
 from pytz import timezone
-from dateutil import parser
 import os
 
 
