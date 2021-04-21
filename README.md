@@ -1,6 +1,6 @@
 # Discord Stock News Bot
 
-A Discord bot that monitors and reports stock news from Robinhood to a specific discord channel every 10min.
+A Discord bot that monitors and reports stock news from Robinhood or Yahoo Finance to a specific discord channel every 10min.
 
 Requirements
 
