@@ -1,7 +1,10 @@
 import discord
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from pytz import timezone
 import os
+
+
+central_timezone = timezone('US/Central')
 
 
 class DiscordHelper:
@@ -40,6 +43,22 @@ class DiscordHelper:
          for message in messages if message.author.name != self._bot_name]
         return non_bot_messages
 
+    def is_newer_date(self, given_date):
+        old_date = datetime.now() - timedelta(days=2)
+        return given_date >= old_date.astimezone(central_timezone)
+
+    async def get_old_messages(self, channel):
+        old_date = datetime.now() - timedelta(days=7)
+
+        messages = await channel.history(limit=100).flatten()
+
+        # Get only news-bot messages
+        news_bot_messages = []
+        if(len(messages) > 0):
+            [news_bot_messages.append(
+                message) for message in messages if message.author.name != self._bot_name or message.embeds[0].timestamp < old_date]
+        return await self.remove_empty_embed_messages(news_bot_messages)
+
     async def get_bot_messages(self, channel):
         messages = await channel.history(limit=100).flatten()
 
@@ -67,9 +86,7 @@ class DiscordHelper:
         else:
             stock_date = datetime.strptime(clean_date, '%B %d, %Y, %H:%M %p')
 
-        CT = timezone('America/Chicago')
-
-        return CT.localize(stock_date, is_dst=None)
+        return stock_date.astimezone(central_timezone)
 
     def is_stock_info_already_posted(self, stock_info, list_of_messages):
         list_of_embed_messages = []

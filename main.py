@@ -8,6 +8,7 @@ import schedule
 import time
 import os
 import asyncio
+from datetime import datetime, date, timedelta
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
@@ -35,9 +36,7 @@ async def post_news_info():
                     channel = get_channel()
                     news_bot_messages = await discord_helper.get_bot_messages(channel)
 
-                    if(stock_info is not None and discord_helper.is_stock_info_already_posted(stock_info, news_bot_messages)):
-                        #  Check if post is from last 5 days
-
+                    if(stock_info is not None and discord_helper.is_stock_info_already_posted(stock_info, news_bot_messages) and discord_helper.is_newer_date(discord_helper.get_clean_date(stock_info.published_at))):
                         await channel.send(embed=discord_helper.create_embed(stock_info))
             # Play every 10min of seconds
             await asyncio.sleep(int(os.getenv("POLL_INTERVAL", "600")))
@@ -45,7 +44,7 @@ async def post_news_info():
         print(ex)
 
 
-@client.event
+@ client.event
 async def on_message(message):
     await client.wait_until_ready()
 
@@ -76,7 +75,11 @@ async def on_message(message):
         await channel.send("Here are the commands:\n" + output)
     elif(message.content.startswith(".purge")):
         non_bot_messages = await discord_helper.get_non_bot_messages(channel)
+        old_bot_messages = await discord_helper.get_old_messages(channel)
+        # remove news messages that are more than 7 days old
         await discord_helper.delete_messages_channel(message.channel, non_bot_messages)
+        await discord_helper.delete_messages_channel(message.channel, old_bot_messages)
+        print("done with all")
 
 while True:
     try:
