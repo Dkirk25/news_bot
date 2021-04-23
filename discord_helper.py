@@ -4,12 +4,10 @@ from pytz import timezone
 import os
 
 
-central_timezone = timezone('US/Central')
-
-
 class DiscordHelper:
     def __init__(self):
         self._bot_name = os.getenv("BOT_NAME")
+        self.central_timezone = timezone('US/Central')
 
     def create_embed(self, new_stock_info):
         embed = discord.Embed(
@@ -45,7 +43,7 @@ class DiscordHelper:
 
     def is_newer_date(self, given_date):
         old_date = datetime.now() - timedelta(days=2)
-        return given_date >= old_date.astimezone(central_timezone)
+        return given_date >= old_date.astimezone(self.central_timezone)
 
     async def get_old_messages(self, channel):
         old_date = datetime.now() - timedelta(days=7)
@@ -84,9 +82,9 @@ class DiscordHelper:
         if("/" in clean_date):
             stock_date = datetime.strptime(clean_date, '%Y/%m/%d %H:%M:%S')
         else:
-            stock_date = datetime.strptime(clean_date, '%B %d, %Y, %H:%M %p')
+            stock_date = datetime.strptime(clean_date, '%B %d, %Y, %I:%M %p')
 
-        return stock_date.astimezone(central_timezone)
+        return stock_date.astimezone(self.central_timezone)
 
     def is_stock_info_already_posted(self, stock_info, list_of_messages):
         list_of_embed_messages = []
