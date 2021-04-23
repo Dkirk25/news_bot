@@ -13,20 +13,16 @@ class TestSum(unittest.TestCase):
         discord_helper = DiscordHelper()
 
         news = []
-        news = yahoo_news.fetch_news("mro")[0]
+        news = yahoo_news.fetch_news("apha")[0]
 
         # check if date is from last 5 days
         nice_date = discord_helper.get_clean_date(news.published_at)
 
-        central_timezone = timezone('US/Central')
-
         stock_date = nice_date.strftime(
             '%B %d, %Y, %I:%M %p')
 
-        # self.assertTrue(datetime.now()-timedelta(5) <= nice_date)
-
         # April 23, 2021, 2:12 PM
-        self.assertEqual("April 23, 2021, 02:12 PM", str(stock_date))
+        self.assertEqual("April 23, 2021, 03:54 PM", stock_date)
 
         # self.assertTrue(discord_helper.is_newer_date(
         #     discord_helper.get_clean_date(news.published_at)))

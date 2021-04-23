@@ -7,7 +7,7 @@ import os
 class DiscordHelper:
     def __init__(self):
         self._bot_name = os.getenv("BOT_NAME")
-        self.central_timezone = timezone('US/Central')
+        self.central_timezone = timezone('America/Chicago')
 
     def create_embed(self, new_stock_info):
         embed = discord.Embed(
@@ -84,7 +84,7 @@ class DiscordHelper:
         else:
             stock_date = datetime.strptime(clean_date, '%B %d, %Y, %I:%M %p')
 
-        return stock_date.astimezone(self.central_timezone)
+        return self.central_timezone.normalize(stock_date.astimezone(self.central_timezone))
 
     def is_stock_info_already_posted(self, stock_info, list_of_messages):
         list_of_embed_messages = []
