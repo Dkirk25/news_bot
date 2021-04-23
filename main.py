@@ -36,6 +36,8 @@ async def post_news_info():
                     news_bot_messages = await discord_helper.get_bot_messages(channel)
 
                     if(stock_info is not None and discord_helper.is_stock_info_already_posted(stock_info, news_bot_messages)):
+                        #  Check if post is from last 5 days
+
                         await channel.send(embed=discord_helper.create_embed(stock_info))
             # Play every 10min of seconds
             await asyncio.sleep(int(os.getenv("POLL_INTERVAL", "600")))

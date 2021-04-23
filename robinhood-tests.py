@@ -31,7 +31,7 @@ def fetch_news(stock):
         info_results = news["results"]
         for i in info_results:
             stock_info = StockInfo(i["uuid"], i["title"], i["source"], i["published_at"],
-                                   i["preview_text"].replace("\n\n", ""), i["url"], stock_to_search)
+                                   i["preview_text"].replace("\n\n", ""), i["url"], stock_to_search, "0.00")
             print(str(stock_info))
             clean_stock_list.append(stock_info)
     except Exception as e:

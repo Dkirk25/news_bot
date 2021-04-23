@@ -67,7 +67,9 @@ class DiscordHelper:
         else:
             stock_date = datetime.strptime(clean_date, '%B %d, %Y, %H:%M %p')
 
-        return datetime(stock_date.year, stock_date.month, stock_date.day, stock_date.hour, stock_date.minute, tzinfo=timezone("US/Central"))
+        CT = timezone('America/Chicago')
+
+        return CT.localize(stock_date, is_dst=None)
 
     def is_stock_info_already_posted(self, stock_info, list_of_messages):
         list_of_embed_messages = []

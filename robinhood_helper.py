@@ -36,7 +36,7 @@ class RobinhoodHelper:
             info_results = news["results"]
 
             for i in info_results:
-                stock_price = format_decimal_price(stock)
+                stock_price = self.format_decimal_price(stock)
                 stock_info = StockInfo(i["uuid"], i["title"], i["source"], i["published_at"],
                                        i["preview_text"].replace("\n\n", ""), i["url"], stock_to_search, stock_price)
                 clean_stock_list.append(stock_info)

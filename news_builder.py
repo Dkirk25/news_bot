@@ -16,4 +16,4 @@ class NewsBuilder:
         elif self.indicator == "N":
             return YahooHelper()
         else:
-            return ValueError(indicator)
+            return ValueError(self.indicator)
