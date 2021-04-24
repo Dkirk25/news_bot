@@ -1,21 +1,24 @@
 import discord
 from datetime import datetime, date, timedelta
-from pytz import timezone
+import pytz
 import os
 
 
 class DiscordHelper:
     def __init__(self):
         self._bot_name = os.getenv("BOT_NAME")
-        self.central_timezone = timezone('America/Chicago')
+        self.central_timezone = pytz.timezone('America/Chicago')
 
     def create_embed(self, new_stock_info):
         embed = discord.Embed(
             title=new_stock_info.title,
             description=new_stock_info.text,
             url=new_stock_info.url,
-            timestamp=self.get_clean_date(new_stock_info.published_at)
+            timestamp=self.get_clean_date(
+                new_stock_info.published_at).astimezone(pytz.utc)
         )
+        # embed.set_footer(str(self.get_clean_date(
+        #     new_stock_info.published_at).astimezone(self.central_timezone)))
         embed.set_author(name=new_stock_info.author +
                          ", " + new_stock_info.stock_name+" (" + new_stock_info.stock_price + ")")
         return embed
@@ -84,7 +87,7 @@ class DiscordHelper:
         else:
             stock_date = datetime.strptime(clean_date, '%B %d, %Y, %I:%M %p')
 
-        return self.central_timezone.normalize(stock_date.astimezone(self.central_timezone))
+        return pytz.utc.normalize(stock_date.astimezone(self.central_timezone))
 
     def is_stock_info_already_posted(self, stock_info, list_of_messages):
         list_of_embed_messages = []
