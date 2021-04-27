@@ -17,10 +17,11 @@ class DiscordHelper:
             timestamp=self.get_clean_date(
                 new_stock_info.published_at).astimezone(pytz.utc)
         )
-        # embed.set_footer(str(self.get_clean_date(
-        #     new_stock_info.published_at).astimezone(self.central_timezone)))
         embed.set_author(name=new_stock_info.author +
                          ", " + new_stock_info.stock_name+" (" + new_stock_info.stock_price + ")")
+
+        embed.set_footer(text=self.embed_date(
+            new_stock_info.published_at))
         return embed
 
     async def delete_messages_channel(self, channel, list_of_messages):
@@ -76,6 +77,11 @@ class DiscordHelper:
             message.embeds) > 0 and message.embeds[0] is not None]
         return clean_discord_messages
 
+    def embed_date(self, clean_date):
+        stock_date = datetime.strptime(
+            clean_date, '%B %d, %Y, %I:%M %p').astimezone(self.central_timezone)
+        return stock_date.strftime('%m/%d/%Y %I:%M %p')
+
     def get_clean_date(self, dirty_date):
         clean_date = dirty_date.replace(
             "-", "/").replace("T", " ").replace("Z", "")
@@ -87,7 +93,7 @@ class DiscordHelper:
         else:
             stock_date = datetime.strptime(clean_date, '%B %d, %Y, %I:%M %p')
 
-        return pytz.utc.normalize(stock_date.astimezone(self.central_timezone))
+        return stock_date.astimezone(self.central_timezone)
 
     def is_stock_info_already_posted(self, stock_info, list_of_messages):
         list_of_embed_messages = []
