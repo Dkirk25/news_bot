@@ -78,8 +78,8 @@ class DiscordHelper:
         return clean_discord_messages
 
     def embed_date(self, clean_date):
-        stock_date = datetime.strptime(
-            clean_date, '%B %d, %Y, %I:%M %p').astimezone(self.central_timezone)
+        stock_date = self.central_timezone.normalize(datetime.strptime(
+            clean_date, '%B %d, %Y, %I:%M %p').astimezone(self.central_timezone))
         return stock_date.strftime('%m/%d/%Y %I:%M %p')
 
     def get_clean_date(self, dirty_date):
