@@ -9,7 +9,7 @@ class YahooHelper:
         self.parser = 'html.parser'
 
     def fetch_news(self, stock):
-        url = f"https://finance.yahoo.com/quote/{stock}/?p={stock}"
+        url = f"https://finance.yahoo.com/quote/{stock}/news?p={stock}"
         list_of_stock_info = []
         try:
             with requests.get(url, stream=True) as page:
