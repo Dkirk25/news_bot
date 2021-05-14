@@ -58,7 +58,7 @@ class DiscordHelper:
         news_bot_messages = []
         if(len(messages) > 0):
             [news_bot_messages.append(
-                message) for message in messages if message.author.name != self._bot_name or message.embeds[0].timestamp < old_date]
+                message) for message in messages if message.author.name != self._bot_name or message.created_at < old_date]
         return await self.remove_empty_embed_messages(news_bot_messages)
 
     async def get_bot_messages(self, channel):
