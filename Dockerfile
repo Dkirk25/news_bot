@@ -1,4 +1,4 @@
-FROM python:3.8.5
+FROM python:3.7.10
 
 COPY . /opt/apps/news_bot
 WORKDIR /opt/apps/news_bot
