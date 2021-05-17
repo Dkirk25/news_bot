@@ -1,18 +1,18 @@
 import firebase_admin
-from firebase_admin import firebase_admin, credentials, firestore
+from firebase_admin import credentials
+from google.cloud import firestore
 import os
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
 class FirebaseDatabase:
     def __init__(self):
-        self._cred =credentials.Certificate(os.getenv("FIREBASE_KEY"))
+        self._cred =credentials.Certificate(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
         firebase_admin.initialize_app(self._cred)
-        self._db = firestore.client()
+        self._db = firestore.Client()
 
     def create_collection(self):
         self._db.collection(u'stocks')
-
 
     def add_stock(self,stock_name):
         doc_ref = self._db.collection(u'stocks').document(stock_name)

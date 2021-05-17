@@ -1,4 +1,3 @@
-from firebase_db import FirebaseDatabase
 from discord.ext import commands
 import discord
 from firebase_db import FirebaseDatabase
