@@ -1,10 +1,9 @@
+from firebase_db import FirebaseDatabase
 from discord.ext import commands
 import discord
-import database
+from firebase_db import FirebaseDatabase
 from discord_helper import DiscordHelper
 from news_builder import NewsBuilder
-import sys
-import schedule
 import time
 import os
 import asyncio
@@ -12,6 +11,7 @@ from datetime import datetime, date, timedelta
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
+database = FirebaseDatabase()
 discord_helper = DiscordHelper()
 client = discord.Client()
 factory = NewsBuilder().get_news_helper()
