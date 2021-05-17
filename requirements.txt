@@ -1,10 +1,10 @@
-schedule==0.6.0
-discord.py==1.4.1
-requests==2.24.0
-firebase_admin==4.3.0
+firebase_admin==4.4.0
 pyotp==2.4.0
+discord.py==1.5.1
 pytz==2020.1
+requests==2.23.0
 beautifulsoup4==4.9.3
 discord==1.0.1
+protobuf==3.17.0
 pyrh==2.0
 python-dotenv==0.17.1
