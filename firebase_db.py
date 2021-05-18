@@ -1,14 +1,11 @@
 import firebase_admin
-from firebase_admin import credentials
 from google.cloud import firestore
-import os
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
 class FirebaseDatabase:
     def __init__(self):
-        self._cred =credentials.Certificate(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
-        firebase_admin.initialize_app(self._cred)
+        firebase_admin.initialize_app()
         self._db = firestore.Client()
 
     def create_collection(self):
