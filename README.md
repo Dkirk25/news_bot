@@ -33,7 +33,11 @@ PASSWORD=
 MFA=
 
 #Switch between Robinhood and Yahoo News
-USE_ROBINHOOD=N or Y
+USE_ROBINHOOD=N or Y (Default)
+
+#Switch between Firebase and Local Txt File
+USE_FIREBASE=N or Y (Default)
+DATABASE_FILE= example_db.txt (This can be blank if you are using Firebase)
 
 # Poll data every 10 minutes
 POLL_INTERVAL=600

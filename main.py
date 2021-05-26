@@ -1,6 +1,6 @@
 from discord.ext import commands
 import discord
-from firebase_db import FirebaseDatabase
+from database_builder import DatabaseBuilder
 from discord_helper import DiscordHelper
 from news_builder import NewsBuilder
 import time
@@ -10,7 +10,7 @@ from datetime import datetime, date, timedelta
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
-database = FirebaseDatabase()
+database = DatabaseBuilder().get_db()
 discord_helper = DiscordHelper()
 client = discord.Client()
 factory = NewsBuilder().get_news_helper()
