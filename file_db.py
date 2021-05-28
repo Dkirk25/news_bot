@@ -19,8 +19,9 @@ class FileDatabase:
         return self._list_of_stocks
 
     def remove_stock(self, stock_name):
-        for ticker in list(self._list_of_stocks):
-            if stock_name in ticker:
+        temp_list = list(self._list_of_stocks)
+        for ticker in temp_list:
+            if stock_name == ticker:
                 self._list_of_stocks.remove(stock_name)
         self.write_list_to_file(self._list_of_stocks)
         self.read_file()
