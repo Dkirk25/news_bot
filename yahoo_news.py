@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 from model.news import StockInfo
+import re
 
 
 class YahooHelper:
@@ -11,8 +12,14 @@ class YahooHelper:
     def fetch_news(self, stock):
         url = f"https://finance.yahoo.com/quote/{stock}/news?p={stock}"
         list_of_stock_info = []
+        header = {'Connection': 'keep-alive',
+                  'Expires': '-1',
+                  'Upgrade-Insecure-Requests': '1',
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) \
+                   AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'
+                  }
         try:
-            with requests.get(url, stream=True) as page:
+            with requests.get(url, stream=True, headers=header) as page:
 
                 soup = BeautifulSoup(page.content, self.parser)
 
