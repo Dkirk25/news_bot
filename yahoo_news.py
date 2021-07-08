@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import date, datetime
 from model.news import StockInfo
 import re
 
@@ -42,7 +42,7 @@ class YahooHelper:
                 source_url = latest_news_article.h3.next['href']
                 news_url = 'https://finance.yahoo.com' + source_url
 
-                published_at = self.get_time_of_article(news_url)
+                published_at = self.get_time_of_article(news_url, header)
 
                 stock_price = soup.find(
                     id="quote-header-info").contents[2].text
@@ -59,8 +59,12 @@ class YahooHelper:
 
         return list_of_stock_info
 
-    def get_time_of_article(self, new_url):
-        page = requests.get(new_url)
-        soup = BeautifulSoup(page.content, self.parser)
-
-        return soup.time.text
+    def get_time_of_article(self, new_url, header):
+        try:
+            with requests.get(new_url, stream=True, headers=header) as page:
+                soup = BeautifulSoup(page.content, self.parser)
+                return soup.time.text
+        except Exception as ex:
+            print("Error: ", ex, "Could not process request: " + new_url)
+            current_timestamp = datetime.now()
+            return datetime.strftime(current_timestamp, '%B %d, %Y, %I:%M %p')

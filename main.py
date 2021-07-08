@@ -6,7 +6,6 @@ from news_builder import NewsBuilder
 import time
 import os
 import asyncio
-from datetime import datetime, date, timedelta
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
