@@ -24,8 +24,9 @@ class YahooHelper:
                 soup = BeautifulSoup(page.content, self.parser)
 
                 #  Need to get the latest article
+                # Cf
                 latest_news_article = soup.find_all(
-                    "div", class_="Ov(h) Pend(44px) Pstart(25px)")[0]
+                    "div", class_="Cf")[3]
 
                 uuid = latest_news_article.h3.next['data-uuid']
 
