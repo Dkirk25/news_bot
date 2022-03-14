@@ -9,7 +9,7 @@ import re
 
 class YahooHelper2:
     def __init__(self):
-        self.parser = lxml
+        self.parser = 'lxml'
 
     def fetch_news(self, stock):
         url = f"https://finance.yahoo.com/quote/{stock}/news?p={stock}"
