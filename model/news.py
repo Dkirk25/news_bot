@@ -1,4 +1,17 @@
+from dataclasses import dataclass, field
+
+
+@dataclass()
 class StockInfo:
+    uuid: str
+    title: str
+    author: str
+    published_at: str
+    text: str
+    url: str
+    stock_name: str
+    stock_price: str = field(repr=False)
+
     def __init__(self, uuid, title, author, published_at, text, url, stock_name, stock_price):
         self.uuid = uuid
         self.title = title
