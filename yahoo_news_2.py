@@ -1,8 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-from datetime import date, datetime
+from datetime import datetime
 from model.news import StockInfo
-import lxml
 import json
 import re
 
