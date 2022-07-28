@@ -1,16 +1,10 @@
-from pyrh import Robinhood
-from model.news import StockInfo
-import database
-import pyotp
 import os
-from pytz import timezone
-from pyrh import Robinhood
-import pyotp
-from datetime import datetime
-from stock_helper import StockHelper
-import unittest
-import sys
+
 from dotenv import load_dotenv
+from pyrh import Robinhood
+
+from model.news import StockInfo
+
 load_dotenv(override=True)
 
 MFA = os.getenv("MFA")

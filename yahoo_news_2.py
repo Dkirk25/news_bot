@@ -1,10 +1,11 @@
-import requests
-from bs4 import BeautifulSoup
-from datetime import datetime
-from model.news import StockInfo
-import lxml
 import json
 import re
+from datetime import datetime
+
+import requests
+from bs4 import BeautifulSoup
+
+from model.news import StockInfo
 
 
 class YahooHelper2:
@@ -51,7 +52,8 @@ class YahooHelper2:
             return datetime.strftime(current_timestamp, '%B %d, %Y, %I:%M %p')
 
     def yahoo_get_header_stock_data(self, matched_string_json):
-        return list(dict(matched_string_json['context']['dispatcher']['stores']['QuoteSummaryStore']['price']['regularMarketPrice']).values())[0]
+        return list(dict(matched_string_json['context']['dispatcher']['stores']['QuoteSummaryStore']['price'][
+                             'regularMarketPrice']).values())[0]
 
     def yahoo_get_news_results(self, stock, matched_string_json, header):
         name_stock_mega = list(

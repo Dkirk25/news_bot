@@ -1,11 +1,12 @@
 import unittest
+
 from file_db import FileDatabase
 
 
 class TestSum(unittest.TestCase):
 
     def test_get_tickers(self):
-        file_db = FileDatabase("full_ticker.txt")
+        file_db = FileDatabase("../full_ticker.txt")
 
         expected = file_db.get_stocks()
 
@@ -13,7 +14,7 @@ class TestSum(unittest.TestCase):
 
     def test_add_tickers(self):
         added_stocks = ["BBW", "abc", "cool"]
-        file_db = FileDatabase("full_ticker.txt")
+        file_db = FileDatabase("../full_ticker.txt")
 
         for stock in added_stocks:
             file_db.add_stock(stock)
@@ -25,7 +26,7 @@ class TestSum(unittest.TestCase):
 
     def test_remove_tickers(self):
         remove_stocks = ["BBW", "abc", "cool"]
-        file_db = FileDatabase("full_ticker.txt")
+        file_db = FileDatabase("../full_ticker.txt")
 
         for stock in remove_stocks:
             file_db.remove_stock(stock)

@@ -1,7 +1,9 @@
 import firebase_admin
-from google.cloud import firestore
 from dotenv import load_dotenv
+from google.cloud import firestore
+
 load_dotenv(override=True)
+
 
 class FirebaseDatabase:
     def __init__(self):
@@ -11,7 +13,7 @@ class FirebaseDatabase:
     def create_collection(self):
         self._db.collection(u'stocks')
 
-    def add_stock(self,stock_name):
+    def add_stock(self, stock_name):
         doc_ref = self._db.collection(u'stocks').document(stock_name)
         doc_ref.set({
             u'name': stock_name,

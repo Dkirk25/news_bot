@@ -1,15 +1,14 @@
 import unittest
-from yahoo_news import YahooHelper
+
+from yahoo_news_2 import YahooHelper2
+
 from discord_helper import DiscordHelper
-from pytz import timezone, all_timezones
-from datetime import date, timedelta, datetime
-from pytz import timezone
 
 
 class TestSum(unittest.TestCase):
 
     def test_validate_timestamp(self):
-        yahoo_news = YahooHelper()
+        yahoo_news = YahooHelper2()
         discord_helper = DiscordHelper()
 
         news = []

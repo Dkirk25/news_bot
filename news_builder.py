@@ -1,8 +1,10 @@
+import os
+
+from dotenv import load_dotenv
 
 from robinhood_helper import RobinhoodHelper
 from yahoo_news_2 import YahooHelper2
-import os
-from dotenv import load_dotenv
+
 load_dotenv(override=True)
 
 

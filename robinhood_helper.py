@@ -1,12 +1,12 @@
-from pyrh import Robinhood
-import pyotp
-import os
-import time
-from datetime import date, timedelta
-from dotenv import load_dotenv
-from model.news import StockInfo
-import json
 import decimal
+import os
+from datetime import date, timedelta
+
+from dotenv import load_dotenv
+from pyrh import Robinhood
+
+from model.news import StockInfo
+
 load_dotenv(override=True)
 
 MFA = os.getenv("MFA")
@@ -26,7 +26,7 @@ class RobinhoodHelper:
     def fetch_news(self, stock):
         stock_to_search = stock
         clean_stock_list = []
-        if(self.is_time_to_reauthenticate(date.today())):
+        if self.is_time_to_reauthenticate(date.today()):
             self._rh.login(username=USERNAME,
                            password=PASSWORD,
                            qr_code=MFA)
@@ -48,13 +48,13 @@ class RobinhoodHelper:
         return clean_stock_list
 
     def is_time_to_reauthenticate(self, now):
-        if(now == self._future_date):
+        if now == self._future_date:
             self._future_date = date.today() + timedelta(5)
             return True
         return False
 
     def format_decimal_price(self, stock):
-        TWOPLACES = decimal.Decimal(10) ** -2
+        two_places = decimal.Decimal(10) ** -2
         price = str(self._rh.last_trade_price(stock)[0][0])
 
-        return str(decimal.Decimal(price).quantize(TWOPLACES))
+        return str(decimal.Decimal(price).quantize(two_places))

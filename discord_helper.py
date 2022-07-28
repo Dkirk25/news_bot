@@ -1,7 +1,8 @@
-import discord
-from datetime import datetime, date, timedelta
-import pytz
 import os
+from datetime import datetime, timedelta
+
+import discord
+import pytz
 
 
 class DiscordHelper:
@@ -17,8 +18,8 @@ class DiscordHelper:
             timestamp=self.get_clean_date(
                 new_stock_info.published_at).astimezone(pytz.utc)
         )
-        embed.set_author(name=new_stock_info.author +
-                         ", " + new_stock_info.stock_name+" (" + new_stock_info.stock_price + ")")
+        embed.set_author(
+            name=new_stock_info.author + ", " + new_stock_info.stock_name + " (" + new_stock_info.stock_price + ")")
 
         embed.set_footer(text=self.embed_date(
             new_stock_info.published_at))
@@ -56,9 +57,10 @@ class DiscordHelper:
 
         # Get only news-bot messages
         news_bot_messages = []
-        if(len(messages) > 0):
+        if len(messages) > 0:
             [news_bot_messages.append(
-                message) for message in messages if message.author.name != self._bot_name or message.created_at < old_date]
+                message) for message in messages if
+                message.author.name != self._bot_name or message.created_at < old_date]
         return await self.remove_empty_embed_messages(news_bot_messages)
 
     async def get_bot_messages(self, channel):
@@ -66,7 +68,7 @@ class DiscordHelper:
 
         # Get only news-bot messages
         news_bot_messages = []
-        if(len(messages) > 0):
+        if len(messages) > 0:
             [news_bot_messages.append(
                 message) for message in messages if message.author.name == self._bot_name]
         return await self.remove_empty_embed_messages(news_bot_messages)
@@ -86,9 +88,7 @@ class DiscordHelper:
         clean_date = dirty_date.replace(
             "-", "/").replace("T", " ").replace("Z", "")
 
-        stock_date = ""
-
-        if("/" in clean_date):
+        if "/" in clean_date:
             stock_date = datetime.strptime(clean_date, '%Y/%m/%d %H:%M:%S')
         else:
             stock_date = datetime.strptime(clean_date, '%B %d, %Y, %I:%M %p')
@@ -106,6 +106,6 @@ class DiscordHelper:
         filtered_even_more = list(filter(
             lambda x: stock_info.title in x.title, filtered_stock_list))
 
-        if(len(filtered_even_more) == 0):
+        if len(filtered_even_more) == 0:
             return True
         return False
