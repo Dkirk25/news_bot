@@ -9,3 +9,5 @@ protobuf==3.17.0
 pyrh==2.0
 python-dotenv==0.21.0
 lxml>=4.9.1
+aiohttp==3.8.3
+pycryptodome==3.16.0

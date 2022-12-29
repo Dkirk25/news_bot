@@ -7,6 +7,11 @@ from bs4 import BeautifulSoup
 
 from model.news import StockInfo
 
+from store_decoder import StoreDecoder
+
+
+decoder = StoreDecoder()
+
 
 class YahooHelper2:
     def __init__(self):
@@ -52,14 +57,14 @@ class YahooHelper2:
             return datetime.strftime(current_timestamp, '%B %d, %Y, %I:%M %p')
 
     def yahoo_get_header_stock_data(self, matched_string_json):
-        return list(dict(matched_string_json['context']['dispatcher']['stores']['QuoteSummaryStore']['price'][
+        return list(dict(decoder.decode_store(matched_string_json)['QuoteSummaryStore']['price'][
                              'regularMarketPrice']).values())[0]
 
     def yahoo_get_news_results(self, stock, matched_string_json, header):
-        name_stock_mega = list(
-            matched_string_json['context']['dispatcher']['stores']['StreamStore']['streams'])[0]
-        yahoo_news_index = matched_string_json['context']['dispatcher']['stores'][
-            'StreamStore']['streams'][name_stock_mega]['data']['stream_items'][0]
+        clean_stores = decoder.decode_store(matched_string_json)
+        name_stock_mega = list(clean_stores['StreamStore']['streams'])[0]
+        yahoo_news_index = clean_stores['StreamStore']['streams'][name_stock_mega]['data']['stream_items'][0]
+        
         uuid = yahoo_news_index['id']
         title = yahoo_news_index['title']
         summary = yahoo_news_index['summary']

@@ -99,4 +99,4 @@ def handle_crash():
 
 
 while True:
-    start_script()
+    client.run(start_script())
