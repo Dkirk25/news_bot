@@ -9,11 +9,8 @@ from Crypto.Util.Padding import unpad
 class StoreDecoder:
     def decode_store(self, data):
         encrypted_stores = data['context']['dispatcher']['stores']
-        _cs = data["_cs"]
-        _cr = data["_cr"]
-
-        _cr = b"".join(int.to_bytes(i, length=4, byteorder="big", signed=True) for i in json.loads(_cr)["words"])
-        password = hashlib.pbkdf2_hmac("sha1", _cs.encode("utf8"), _cr, 1, dklen=32).hex()
+        password_key = next(key for key in data.keys() if key not in ["context", "plugins"])
+        password = data[password_key]
 
         encrypted_stores = b64decode(encrypted_stores)
         assert encrypted_stores[0:8] == b"Salted__"
@@ -60,7 +57,6 @@ class StoreDecoder:
 
         key, iv = EVPKDF(password, salt, keySize=32, ivSize=16, iterations=1, hashAlgorithm="md5")
 
-        
         cipher = AES.new(key, AES.MODE_CBC, iv=iv)
         plaintext = cipher.decrypt(encrypted_stores)
         plaintext = unpad(plaintext, 16, style="pkcs7")

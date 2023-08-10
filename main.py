@@ -12,8 +12,9 @@ from news_builder import NewsBuilder
 load_dotenv(override=True)
 
 database = DatabaseBuilder().get_db()
+intents = discord.Intents.default()
 discord_helper = DiscordHelper()
-client = discord.Client()
+client = discord.Client(intents=intents)
 factory = NewsBuilder().get_news_helper()
 
 
@@ -84,13 +85,14 @@ async def on_message(message):
         print("done with all")
 
 
-def start_script():
-    try:
-        client.loop.create_task(post_news_info())
-        client.run(os.getenv("TOKEN"))
-    except Exception as e:
-        print("Error in script, trying to restart:", e)
-        handle_crash()
+async def start_script():
+    async with client:
+        try:
+            client.loop.create_task(post_news_info())
+            await client.start(os.getenv("TEST_TOKEN_ID"))
+        except Exception as e:
+            print("Error in script, trying to restart:", e)
+            handle_crash()
 
 
 def handle_crash():
@@ -99,4 +101,4 @@ def handle_crash():
 
 
 while True:
-    client.run(start_script())
+    asyncio.run(start_script())

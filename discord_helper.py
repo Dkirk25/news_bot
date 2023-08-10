@@ -13,16 +13,16 @@ class DiscordHelper:
     def create_embed(self, new_stock_info):
         embed = discord.Embed(
             title=new_stock_info.title,
-            description=new_stock_info.text,
+            # description=new_stock_info.text,
             url=new_stock_info.url,
             timestamp=self.get_clean_date(
                 new_stock_info.published_at).astimezone(pytz.utc)
         )
         embed.set_author(
-            name=new_stock_info.author + ", " + new_stock_info.stock_name + " (" + new_stock_info.stock_price + ")")
+            name=new_stock_info.author + ", " + new_stock_info.stock_name + " (" + str(new_stock_info.stock_price) + ")")
 
-        embed.set_footer(text=self.embed_date(
-            new_stock_info.published_at))
+        embed.set_footer(text=self.get_clean_date(
+                new_stock_info.published_at).astimezone(pytz.utc))
         return embed
 
     async def delete_messages_channel(self, channel, list_of_messages):
@@ -40,7 +40,7 @@ class DiscordHelper:
             print("done")
 
     async def get_non_bot_messages(self, channel):
-        messages = await channel.history(limit=100).flatten()
+        messages = [message async for message in channel.history(limit=100)]
         non_bot_messages = []
         [non_bot_messages.append(message)
          for message in messages if message.author.name != self._bot_name]
@@ -53,7 +53,7 @@ class DiscordHelper:
     async def get_old_messages(self, channel):
         old_date = datetime.now() - timedelta(days=7)
 
-        messages = await channel.history(limit=100).flatten()
+        messages = [message async for message in channel.history(limit=100)]
 
         # Get only news-bot messages
         news_bot_messages = []
@@ -64,7 +64,7 @@ class DiscordHelper:
         return await self.remove_empty_embed_messages(news_bot_messages)
 
     async def get_bot_messages(self, channel):
-        messages = await channel.history(limit=100).flatten()
+        messages = [message async for message in channel.history(limit=100)]
 
         # Get only news-bot messages
         news_bot_messages = []
@@ -85,20 +85,21 @@ class DiscordHelper:
         return stock_date.strftime('%m/%d/%Y %I:%M %p')
 
     def get_clean_date(self, dirty_date):
-        clean_date = dirty_date.replace(
-            "-", "/").replace("T", " ").replace("Z", "")
+        timestamp = datetime.fromtimestamp(dirty_date)
+        # clean_date = timestamp.replace(
+        #     "-", "/").replace("T", " ").replace("Z", "")
 
-        if "/" in clean_date:
-            stock_date = datetime.strptime(clean_date, '%Y/%m/%d %H:%M:%S')
-        else:
-            stock_date = datetime.strptime(clean_date, '%B %d, %Y, %I:%M %p')
+        # if "/" in clean_date:
+        #     stock_date = datetime.strptime(clean_date, '%Y/%m/%d %H:%M:%S')
+        # else:
+        #     stock_date = datetime.strptime(clean_date, '%B %d, %Y, %I:%M %p')
 
-        return stock_date.astimezone(self.central_timezone)
+        return timestamp.astimezone(self.central_timezone)
 
     def is_stock_info_already_posted(self, stock_info, list_of_messages):
         list_of_embed_messages = []
         [list_of_embed_messages.append(message.embeds[0]) for message in list_of_messages if len(
-            message.embeds) > 0 and message.embeds[0] is not None]
+            message.embeds) > 0 and message.embeds[0] is not None and "Jingle" not in message.embeds[0].title]
 
         filtered_stock_list = list(filter(
             lambda x: stock_info.stock_name in x.author.name, list_of_embed_messages))
